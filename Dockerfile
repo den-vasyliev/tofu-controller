@@ -1,5 +1,5 @@
 # Build the manager binary
-FROM golang:1.20 as builder
+FROM golang:1.23 as builder
 
 ARG TARGETARCH
 ARG BUILD_SHA
@@ -42,8 +42,8 @@ ARG LIBCRYPTO_VERSION
 
 RUN apk update && \
     apk add --no-cache \
-    libcrypto3=${LIBCRYPTO_VERSION} \
-    libssl3=${LIBCRYPTO_VERSION} \
+    libcrypto3 \
+    libssl3 \
     ca-certificates tini git openssh-client gnupg \
     libretls \
     busybox
