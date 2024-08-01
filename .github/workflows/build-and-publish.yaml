@@ -138,7 +138,7 @@ jobs:
           build-args: |
             LIBCRYPTO_VERSION=${{ env.LIBCRYPTO_VERSION }}
           tags: |
-            ghcr.io/flux-iac/branch-planner:${{ steps.prep.outputs.VERSION }}
+            ghcr.io/den-vasyliev/branch-planner:${{ steps.prep.outputs.VERSION }}
           labels: |
             org.opencontainers.image.title=${{ github.event.repository.name }}
             org.opencontainers.image.description=${{ github.event.repository.description }}
