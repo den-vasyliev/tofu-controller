@@ -58,11 +58,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@b80ff79f1755d06ba70441c368a6fe801f5f3a62 # v4.0.0
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
       - name: Setup Go
-        uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7 # v5.0.1
+        uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
         with:
-          go-version-file: go.mod
+          go-version: 1.20.x
           cache-dependency-path: |
             **/go.sum
             **/go.mod
@@ -75,7 +75,7 @@ jobs:
           terraform --version
       - name: Setup Kustomize
         if: "!github.event.pull_request.head.repo.fork"
-        uses: fluxcd/pkg/actions/kustomize@1bfad582060d2d6e464756fbd5d7a2b2fa4f75b9 # main
+        uses: fluxcd/pkg/actions/kustomize@6c0b4426ba7809a9406c1a4e07aa4be4984ea72f # main
       - name: Run tests
         run: |
           make install-envtest
@@ -85,11 +85,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@b80ff79f1755d06ba70441c368a6fe801f5f3a62 # v4.0.0
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
       - name: Setup Go
-        uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7 # v5.0.1
+        uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
         with:
-          go-version-file: go.mod
+          go-version: 1.20.x
           cache-dependency-path: |
             **/go.sum
             **/go.mod
@@ -102,7 +102,7 @@ jobs:
           terraform --version
       - name: Setup Kustomize
         if: "!github.event.pull_request.head.repo.fork"
-        uses: fluxcd/pkg/actions/kustomize@1bfad582060d2d6e464756fbd5d7a2b2fa4f75b9 # main
+        uses: fluxcd/pkg/actions/kustomize@6c0b4426ba7809a9406c1a4e07aa4be4984ea72f # main
       - name: Run tests
         run: |
           make install-envtest

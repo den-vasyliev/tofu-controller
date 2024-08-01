@@ -1,5 +1,5 @@
 image:
-  repository: test/tofu-controller
+  repository: test/tf-controller
   tag: ct
 runner:
   image:

@@ -38,7 +38,6 @@ import (
 	flag "github.com/spf13/pflag"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	"k8s.io/client-go/kubernetes"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	ctrlcache "sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
@@ -221,12 +220,6 @@ func main() {
 		allowCrossNamespaceRefs = !aclOptions.NoCrossNamespaceRefs
 	}
 
-	clientset, err := kubernetes.NewForConfig(mgr.GetConfig())
-	if err != nil {
-		setupLog.Error(err, "unable to set up cert rotation")
-		os.Exit(1)
-	}
-
 	reconciler := &controllers.TerraformReconciler{
 		Client:                    mgr.GetClient(),
 		Scheme:                    mgr.GetScheme(),
@@ -241,7 +234,6 @@ func main() {
 		ClusterDomain:             clusterDomain,
 		NoCrossNamespaceRefs:      !allowCrossNamespaceRefs,
 		UsePodSubdomainResolution: usePodSubdomainResolution,
-		Clientset:                 clientset,
 	}
 
 	if err = reconciler.SetupWithManager(mgr, concurrent, httpRetry); err != nil {

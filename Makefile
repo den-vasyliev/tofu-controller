@@ -13,7 +13,7 @@ BUILD_VERSION ?= $(shell git describe --tags $$(git rev-list --tags --max-count=
 # - .github/workflows/release-runners.yaml
 # - .github/workflows/release.yaml
 # - Tiltfile
-LIBCRYPTO_VERSION ?= 3.1.6-r2
+LIBCRYPTO_VERSION ?= 3.1.4-r5
 
 # source controller version
 SOURCE_VER ?= v1.0.0-rc.1
@@ -58,7 +58,6 @@ help: ## Display this help.
 .PHONY: manifests
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config="config/crd/bases"
-	cp config/crd/bases/infra.contrib.fluxcd.io_terraforms.yaml charts/tofu-controller/crds/crds.yaml
 	cd api; $(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config="../config/crd/bases"
 
 .PHONY: generate
@@ -248,7 +247,7 @@ protoc-gen-go-grpc: ## Download controller-gen locally if necessary.
 CONTROLLER_GEN = $(GOBIN)/controller-gen
 .PHONY: controller-gen
 controller-gen: ## Download controller-gen locally if necessary.
-	$(call go-install-tool,$(CONTROLLER_GEN),sigs.k8s.io/controller-tools/cmd/controller-gen@v0.15.0)
+	$(call go-install-tool,$(CONTROLLER_GEN),sigs.k8s.io/controller-tools/cmd/controller-gen@v0.9.2)
 
 # Find or download gen-crd-api-reference-docs
 GEN_CRD_API_REFERENCE_DOCS = $(GOBIN)/gen-crd-api-reference-docs
@@ -268,7 +267,7 @@ install-envtest: setup-envtest
 ENVTEST = $(shell pwd)/bin/setup-envtest
 .PHONY: envtest
 setup-envtest: ## Download envtest-setup locally if necessary.
-	$(call go-install-tool,$(ENVTEST),sigs.k8s.io/controller-runtime/tools/setup-envtest@release-0.16)
+	$(call go-install-tool,$(ENVTEST),sigs.k8s.io/controller-runtime/tools/setup-envtest@latest)
 
 # go-install-tool will 'go install' any package $2 and install it to $1.
 PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
@@ -288,10 +287,10 @@ endef
 release-manifests:
 	rm -rf ./config/release || true
 	mkdir ./config/release
-	kustomize build ./config/crd > ./config/release/tofu-controller.crds.yaml
-	kustomize build ./config/rbac > ./config/release/tofu-controller.rbac.yaml
-	kustomize build ./config/manager > ./config/release/tofu-controller.deployment.yaml
-	kustomize build ./config/package > ./config/release/tofu-controller.packages.yaml
+	kustomize build ./config/crd > ./config/release/tf-controller.crds.yaml
+	kustomize build ./config/rbac > ./config/release/tf-controller.rbac.yaml
+	kustomize build ./config/manager > ./config/release/tf-controller.deployment.yaml
+	kustomize build ./config/package > ./config/release/tf-controller.packages.yaml
 
 # Helm
 SRC_ROOT = $(shell git rev-parse --show-toplevel)

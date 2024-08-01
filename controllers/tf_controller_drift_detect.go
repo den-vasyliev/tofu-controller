@@ -25,16 +25,15 @@ func (r *TerraformReconciler) shouldDetectDrift(terraform infrav1.Terraform, rev
 	if terraform.Spec.Destroy == true {
 		return false
 	}
-
+	// fix for Allow drift detection for new objects in drift-detection mode #1370
+	if terraform.Spec.ApprovePlan == infrav1.ApprovePlanDisableValue {
+		return true
+	}
 	// new object
 	if terraform.Status.LastAppliedRevision == "" &&
 		terraform.Status.LastPlannedRevision == "" &&
 		terraform.Status.LastAttemptedRevision == "" {
 		return false
-	}
-
-	if terraform.Spec.ApprovePlan == infrav1.ApprovePlanDisableValue {
-		return true
 	}
 
 	// thing worked normally, no change pending

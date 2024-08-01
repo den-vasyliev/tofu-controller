@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/fluxcd/pkg/ssa"
-	ssautils "github.com/fluxcd/pkg/ssa/utils"
 	"github.com/theckman/yacspin"
 	appsv1 "k8s.io/api/apps/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -83,7 +82,7 @@ func (c *CLI) Uninstall(out io.Writer) error {
 			return err
 		}
 
-		objects, err := ssautils.ReadObjects(bytes.NewReader(data))
+		objects, err := ssa.ReadObjects(bytes.NewReader(data))
 		if err != nil {
 			return err
 		}

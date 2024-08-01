@@ -2,13 +2,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    {{- include "tofu-controller.labels" . | nindent 4 }}
-  name: {{ include "tofu-controller.fullname" . }}
+    {{- include "tf-controller.labels" . | nindent 4 }}
+  name: {{ include "tf-controller.fullname" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "tofu-controller.selectorLabels" . | nindent 6 }}
+      {{- include "tf-controller.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,7 +19,7 @@ spec:
         {{- with .Values.podLabels }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- include "tofu-controller.selectorLabels" . | nindent 8 }}
+        {{- include "tf-controller.selectorLabels" . | nindent 8 }}
     spec:
       {{- if not .Values.serviceAccount.create }}
       {{- with .Values.imagePullSecrets }}
@@ -30,7 +30,7 @@ spec:
       containers:
       - args:
         - --allow-cross-namespace-refs={{ .Values.allowCrossNamespaceRefs }}
-        - --watch-all-namespaces={{ .Values.watchAllNamespaces }}
+        - --watch-all-namespaces
         - --log-level={{ .Values.logLevel }}
         - --log-encoding={{ .Values.logEncoding }}
         - --enable-leader-election
@@ -85,7 +85,7 @@ spec:
         {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      serviceAccountName: {{ include "tofu-controller.serviceAccountName" . }}
+      serviceAccountName: {{ include "tf-controller.serviceAccountName" . }}
       terminationGracePeriodSeconds: 10
       {{- with .Values.volumes }}
       volumes:
