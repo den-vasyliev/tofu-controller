@@ -1,7 +1,7 @@
 name: Build and Publish Images
 on:
-  workflow_dispatch:
-
+  push
+  
 permissions:
   contents: read # for actions/checkout to fetch code
 
