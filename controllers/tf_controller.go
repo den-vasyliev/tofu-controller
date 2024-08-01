@@ -50,7 +50,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	kerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/client-go/kubernetes"
 	kuberecorder "k8s.io/client-go/tools/record"
 	"sigs.k8s.io/cli-utils/pkg/kstatus/polling"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -83,7 +82,6 @@ type TerraformReconciler struct {
 	ClusterDomain             string
 	NoCrossNamespaceRefs      bool
 	UsePodSubdomainResolution bool
-	Clientset                 *kubernetes.Clientset
 }
 
 //+kubebuilder:rbac:groups=infra.contrib.fluxcd.io,resources=terraforms,verbs=get;list;watch;create;update;patch;delete
@@ -138,6 +136,7 @@ func (r *TerraformReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		}
 
 		// Record Prometheus metrics.
+		r.Metrics.RecordReadiness(ctx, &terraform)
 		r.Metrics.RecordSuspend(ctx, &terraform, terraform.Spec.Suspend)
 		r.Metrics.RecordDuration(ctx, &terraform, reconcileStart)
 	}()

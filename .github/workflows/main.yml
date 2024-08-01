@@ -1,13 +1,13 @@
 name: Build and Publish Images
 on:
-  workflow_dispatch:
-
+  push
+  
 permissions:
   contents: read # for actions/checkout to fetch code
 
 env:
   CONTROLLER: ${{ github.event.repository.name }}
-  LIBCRYPTO_VERSION: "3.1.4-r5"
+  LIBCRYPTO_VERSION: "3.3.1-r3"
 
 jobs:
   test:
@@ -79,7 +79,7 @@ jobs:
             LIBCRYPTO_VERSION=${{ env.LIBCRYPTO_VERSION }}
           platforms: linux/amd64,linux/arm64 #,linux/arm/v7
           tags: |
-            ghcr.io/flux-iac/${{ env.CONTROLLER }}:${{ steps.prep.outputs.VERSION }}
+            ghcr.io/den-vasyliev/${{ env.CONTROLLER }}:${{ steps.prep.outputs.VERSION }}
           labels: |
             org.opencontainers.image.title=${{ github.event.repository.name }}
             org.opencontainers.image.description=${{ github.event.repository.description }}
@@ -100,7 +100,7 @@ jobs:
             BUILD_SHA=${{ steps.prep.outputs.BUILD_SHA }}
           platforms: linux/amd64,linux/arm64 #,linux/arm/v7
           tags: |
-            ghcr.io/flux-iac/tf-runner:${{ steps.prep.outputs.VERSION }}-base
+            ghcr.io/den-vasyliev/tf-runner:${{ steps.prep.outputs.VERSION }}-base
           labels: |
             org.opencontainers.image.title=${{ github.event.repository.name }}
             org.opencontainers.image.description=${{ github.event.repository.description }}

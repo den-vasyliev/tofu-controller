@@ -2,36 +2,30 @@ version: 2
 
 updates:
   - package-ecosystem: "gomod"
-    directories:
-      - "/"
-      - "/api"
-      - "/tfctl"
+    directory: "/"
     labels: ["area/ci", "dependencies"]
     schedule:
       interval: "weekly"
+    # Project maintainers and the Wild Watermelon team
+    reviewers:
+      - "weaveworks/wild-watermelon"
+    # Only do security updates not version updates.
+    open-pull-requests-limit: 0
     groups:
-      go-patch:
-        update-types:
-        - "patch"
-      go-minor:
-        update-types:
-        - "minor"
-      go-major:
-        update-types:
-        - "major"
+      # Group all updates together, so that they are all applied in a single PR.
+      # Grouped updates are currently in beta and is subject to change.
+      # xref: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#groups
+      ci:
+        patterns:
+          - "*"
 
+
+  # maintain dependencies for github actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-    groups:
-      gh-patch:
-        update-types:
-        - "patch"
-      gh-minor:
-        update-types:
-        - "minor"
-      gh-major:
-        update-types:
-        - "major"
-
+    reviewers:
+      - "weaveworks/wild-watermelon"
+    # Only do security updates not version updates.
+    open-pull-requests-limit: 0

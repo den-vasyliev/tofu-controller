@@ -21,20 +21,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@b80ff79f1755d06ba70441c368a6fe801f5f3a62 # v4.0.0
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
       - name: Setup YQ
         uses: frenck/action-setup-yq@c4b5be8b4a215c536a41d436757d9feb92836d4f # v1.0.2
         with:
           version: 4.14.2
       - name: Setup Go
-        uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7 # v5.0.1
+        uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
         with:
-          go-version-file: go.mod
+          go-version: 1.20.x
           cache-dependency-path: |
             **/go.sum
             **/go.mod
       - name: Cache Docker layers
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
         id: cache
         with:
           path: /tmp/.buildx-cache
@@ -42,15 +42,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-ghcache-
       - name: Setup Kubernetes
-        uses: helm/kind-action@0025e74a8c7512023d06dc019c617aa3cf561fde # v1.10.0
+        uses: helm/kind-action@dda0770415bac9fc20092cacbc54aa298604d140 # v1.8.0
         with:
           version: v0.18.0
           node_image: kindest/node:v1.24.12@sha256:1e12918b8bc3d4253bc08f640a231bb0d3b2c5a9b28aa3f2ca1aee93e1e8db16
           cluster_name: kind
       - name: Setup Kustomize
-        uses: fluxcd/pkg/actions/kustomize@1bfad582060d2d6e464756fbd5d7a2b2fa4f75b9 # main
+        uses: fluxcd/pkg/actions/kustomize@6c0b4426ba7809a9406c1a4e07aa4be4984ea72f # main
       - name: Setup Kubectl
-        uses: fluxcd/pkg/actions/kubectl@1bfad582060d2d6e464756fbd5d7a2b2fa4f75b9 # main
+        uses: fluxcd/pkg/actions/kubectl@847b2c031da93421f6dccca226d591198437a47f # main
       - name: Check if working tree is dirty
         run: |
           if [[ $(git diff --stat) != '' ]]; then

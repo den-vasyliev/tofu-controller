@@ -32,7 +32,7 @@ Prerequisites:
 
 * go = 1.20.x
 * kubebuilder = 3.6.x
-* controller-gen = 0.15.x
+* controller-gen = 0.8.x
 * kustomize = 4.x
 * kubectl >= 1.21
 
@@ -70,31 +70,43 @@ to update the the generated `runner.pg.go` data.
 
 ## How to run the controller locally
 
-Prerequisites:
-
-* go
-* kind
-* kubectl
-* tilt
-* docker
-* flux
-
-Start the KinD cluster with a local registry and install flux:
+Install flux on your test cluster:
 
 ```bash
-./tools/reboot.sh
+flux install
 ```
 
-Build the containers and run them in the KinD cluster:
+Port forward to source-controller artifacts server:
 
 ```bash
-# GITHUB_TOKEN is used by the branch planner and requires read access to the targeted repository.
-# If you do not intend to use the branch planner, then you can set it to a random non-empty string. 
-export GITHUB_TOKEN=<token>
-tilt up
+kubectl -n flux-system port-forward svc/source-controller 8080:80
 ```
 
-Tilt will automatically detect code changes which will retrigger a build and redeploy.
+Export the local address as `SOURCE_CONTROLLER_LOCALHOST`:
+
+```bash
+export SOURCE_CONTROLLER_LOCALHOST=localhost:8080
+```
+
+Export Kubernetes service and port of the test cluster:
+
+```bash
+export KUBERNETES_SERVICE_HOST=
+export KUBERNETES_SERVICE_PORT=
+```
+
+Disable Terraform Kubernetes backend so that it doesn't store the state:
+
+```bash
+export DISABLE_TF_K8S_BACKEND=1
+```
+
+Run the controller locally:
+
+```bash
+make install
+make run
+```
 
 ## How to install the controller
 
